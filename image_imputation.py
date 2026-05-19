@@ -190,7 +190,7 @@ def replace_green_papers_in_image(input_path, output_path, replacement_paths):
     cv2.imwrite(output_path, frame)
     print(f"Saved imputed image to {output_path}")
 
-def replace_green_papers_in_video(input_video_path, output_video_path, replacement_paths, n_frames=None):
+def replace_green_papers_in_video(input_video_path, output_video_path, replacement_paths, start_frame=0, end_frame=None):
     # Load the replacement images once to save I/O operations
     # Load the replacement images once to save I/O operations, adjusting brightness and sharpness
     replacements = []
@@ -217,15 +217,18 @@ def replace_green_papers_in_video(input_video_path, output_video_path, replaceme
     upper_green = np.array([85, 255, 255])
     kernel = np.ones((5, 5), np.uint8)
     
+    # Set the starting frame position
+    cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
+
     # Will hold the pre-calculated static warped images and their full masks
     static_data = [] 
     union_mask = None
     successful_frames = 0
     is_locked = False
     
-    frame_count = 0
+    frame_count = start_frame
     while cap.isOpened():
-        if n_frames is not None and frame_count >= n_frames:
+        if end_frame is not None and frame_count > end_frame:
             break
             
         ret, frame = cap.read()
@@ -422,7 +425,7 @@ def generate_synthetic_images(n_samples = 3):
 
 if __name__ == "__main__":
     # Example usage for video processing
-    replace_green_papers_in_video("./teleop_videos/file-000.mp4", "output_video_occlusion_teleop.mp4", ["obama_images/image_0.png", "taylor_images/image_0.png", "yann_images/image_0.png"], n_frames=1000)
+    replace_green_papers_in_video("./teleop_videos/file-000.mp4", "output_video_occlusion_teleop.mp4", ["obama_images/image_0.png", "taylor_images/image_0.png", "yann_images/image_0.png"], start_frame=500, end_frame=1000)
     
     # Example usage for image processing
     #replace_green_papers_in_image("green_screen_template.png", "output_image.jpg", ["obama_images/image_0.png", "taylor_images/image_1.png", "yann_images/image_2.png"])
