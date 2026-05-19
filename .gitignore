@@ -1,0 +1,16 @@
+# Python cache and environments
+__pycache__/
+*.py[cod]
+*venv*/
+
+# Generated datasets and directories
+
+permutations/
+celebrities_TOY/
+real_images/
+
+# Videos and generated outputs 
+# (GitHub restricts files >100MB, best to ignore videos)
+teleop_videos/
+*.mp4
+output_image.jpg
